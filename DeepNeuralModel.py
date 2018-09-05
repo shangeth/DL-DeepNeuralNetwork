@@ -10,15 +10,23 @@ import matplotlib.pyplot as plt
 
 #-------------------------------------------------------------------------------------------
 class DeepNeuralNetwork:
-    def __init__(self,layers_dims):
+    def __init__(self,layers_dims, initialization='random'):
         self.layers_dims = layers_dims
+        self.initialization = initialization
+        
     
     def initialize_parameters_deep(self, layer_dims):
         np.random.seed(3)
         parameters = {}
         L = len(layer_dims)
         for l in range(1, L):
-            parameters['W' + str(l)] = np.random.randn(layer_dims[l], layer_dims[l-1])*0.01
+            if self.initialization == 'he':
+                factor = np.sqrt(2/layer_dims[l-1])
+            elif self.initialization == 'xavier':
+                factor = np.sqrt(1/layer_dims[l-1])
+            else :
+                factor = 0.01
+            parameters['W' + str(l)] = np.random.randn(layer_dims[l], layer_dims[l-1]) * factor
             parameters['b' + str(l)] = np.zeros((layer_dims[l], 1))   
         return parameters
     
